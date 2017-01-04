@@ -28,6 +28,6 @@
 		}
 	],
 	"require": {
-		"andrewlarsson/php-helpers": "master"
+		"andrewlarsson/php-helpers": "dev-master"
 	}
 }
