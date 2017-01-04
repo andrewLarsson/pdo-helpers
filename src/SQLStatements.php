@@ -17,5 +17,4 @@ class SQLStatements {
 		return file_get_contents($filePath);
 	}
 }
-//SQLStatements::__initialize(PATH_CONF_DATABASE_STATEMENTS);
 ?>

@@ -26,5 +26,4 @@ class Databases {
 		return self::$databases[$key];
 	}
 }
-//Databases::__initialize(PATH_CONF_DATABASE . DIRECTORY_SEPARATOR . "conf.d");
 ?>
