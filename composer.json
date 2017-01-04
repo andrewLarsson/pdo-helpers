@@ -1,0 +1,33 @@
+{
+	"name": "andrewlarsson/php-helpers-pdo",
+	"type": "library",
+	"description" : "Helpers for PHP's PDO",
+	"license": "MIT",
+	"homepage": "https://github.com/andrewLarsson/php-helpers-pdo",
+	"authors": [
+		{
+			"name": "Andrew Larsson",
+			"email": "andrew@developersbliss.com",
+			"homepage" : "https://andrewlarsson.com"
+		},
+		{
+			"name": "Tyler Andersen",
+			"email": "tyler@redserenity.com",
+			"homepage" : "https://github.com/RedSerenityDev"
+		}
+	],
+	"autoload": {
+		"psr-4": {
+			"AndrewLarsson\\Helpers\\PDO\\": "src"
+		}
+	},
+	"repositories": [
+		{
+			"type": "vcs",
+			"url": "https://github.com/andrewLarsson/php-helpers"
+		}
+	],
+	"require": {
+		"andrewlarsson/php-helpers": "master"
+	}
+}
