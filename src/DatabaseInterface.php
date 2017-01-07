@@ -7,5 +7,6 @@ interface DatabaseInterface {
 	public function commit();
 	public function rollBack();
 	public function lastInsertId();
+	public function getConnection();
 }
 ?>

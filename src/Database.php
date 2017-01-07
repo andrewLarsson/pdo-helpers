@@ -48,7 +48,7 @@ class Database implements DatabaseInterface {
 		$this->connection->lastInsertId();
 	}
 
-	public function __getRawConnection() {
+	public function getConnection() {
 		return $this->connection;
 	}
 }

@@ -3,14 +3,14 @@
 use \Exception;
 
 class SQLStatements {
-	private static $directory;
+	private $directory;
 
-	public static function __initialize($directory = "") {
-		self::$directory = $directory;
+	public function __construct($directory = "") {
+		$this->directory = $directory;
 	}
 
-	public static function __callStatic($method, $arguments) {
-		$filePath = self::$directory . DIRECTORY_SEPARATOR . $method . ".sql";
+	public function __get($name) {
+		$filePath = $this->directory . DIRECTORY_SEPARATOR . $name . ".sql";
 		if (!file_exists($filePath)) {
 			throw new Exception("SQL file \"" . $filePath . "\" does not exist.");
 		}

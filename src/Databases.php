@@ -4,26 +4,22 @@ use \Exception;
 use AndrewLarsson\Helpers\INIParser;
 
 class Databases {
-	private static $databases;
-	private static $configs;
+	private $databases;
+	private $configs;
 
-	public static function __initialize($directory = "") {
-		self::$databases = [];
-		self::$configs = new INIParser($directory, DatabaseConfig::class);
+	public function __construct($directory = "") {
+		$this->databases = [];
+		$this->configs = new INIParser($directory, DatabaseConfig::class);
 	}
 
-	public static function __callStatic($method, $arguments) {
-		$key = $method;
-		foreach ($arguments as $argument) {
-			$key .= $argument;
+	public function __get($name) {
+		if (!$this->configs->offsetExists($name)) {
+			throw new Exception("DatabaseConfig \"" . $name . "\" does not exist.");
 		}
-		if (!self::$configs->offsetExists($key)) {
-			throw new Exception("DatabaseConfig \"" . $key . "\" does not exist.");
+		if (!array_key_exists($name, $this->databases)) {
+			$this->databases[$name] = new Database($this->configs[$name]);
 		}
-		if (!array_key_exists($key, self::$databases)) {
-			self::$databases[$key] = new Database(self::$configs[$key]);
-		}
-		return self::$databases[$key];
+		return $this->databases[$name];
 	}
 }
 ?>
