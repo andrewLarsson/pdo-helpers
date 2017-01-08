@@ -6,7 +6,7 @@ interface DatabaseInterface {
 	public function beginTransaction();
 	public function commit();
 	public function rollBack();
-	public function lastInsertId();
+	public function lastInsertId($name = null);
 	public function getConnection();
 }
 ?>

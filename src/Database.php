@@ -44,8 +44,8 @@ class Database implements DatabaseInterface {
 		$this->connection->rollBack();
 	}
 
-	public function lastInsertId() {
-		$this->connection->lastInsertId();
+	public function lastInsertId($name = null) {
+		return $this->connection->lastInsertId($name);
 	}
 
 	public function getConnection() {
