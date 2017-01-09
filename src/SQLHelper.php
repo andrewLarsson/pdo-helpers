@@ -78,7 +78,7 @@ class SQLHelper {
 		return $preparedStatement;
 	}
 
-	public static function prepareSearch(DatabaseInterface $database, ModelAbstract $model, Array $columns = []) {
+	public static function prepareSearch(DatabaseInterface $database, ModelAbstract $model, Array $columns = [], PagingMetaData $paging = null) {
 		$statement = "
 			SELECT
 		";
@@ -102,6 +102,11 @@ class SQLHelper {
 			}
 		}
 		$statement .= implode(", AND ", $criteria);
+		if (!is_null($paging)) {
+			$statement .= "
+				LIMIT :offset, :limit
+			";
+		}
 		$statement .= "
 			;
 		";
@@ -114,13 +119,22 @@ class SQLHelper {
 				$preparedStatement->bindValue(":" . $modelProperty, $value);
 			}
 		}
+		if (!is_null($paging)) {
+			$offset = ($paging->PageSize * (($paging->PageNumber < 1)
+				? 0
+				: $paging->PageNumber - 1
+			));
+			$limit = $paging->PageSize;
+			$preparedStatement->bindValue(":offset", $offset);
+			$preparedStatement->bindValue(":limit", $limit);
+		}
 		return $preparedStatement;
 	}
 	
 	public static function prepareCount(DatabaseInterface $database, ModelAbstract $model) {
 		$statement = "
 			SELECT
-				COUNT(*)
+				COUNT(*) AS 'COUNT'
 		";
 		$statement .= "
 			FROM
