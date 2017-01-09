@@ -116,6 +116,42 @@ class SQLHelper {
 		}
 		return $preparedStatement;
 	}
+	
+	public static function prepareCount(DatabaseInterface $database, ModelAbstract $model) {
+		$statement = "
+			SELECT
+				COUNT(*)
+		";
+		$statement .= "
+			FROM
+				`" . $model::TABLE . "`
+			WHERE
+		";
+		$criteria = [];
+		$modelProperties = get_object_vars($model);
+		foreach ($modelProperties as $modelProperty => $value) {
+			if (
+				!is_null($value)
+				&& ($modelProperty != $model::PRIMARY_KEY)
+			) {
+				$criteria[] = "`" . $modelProperty . "` = :" . $modelProperty;
+			}
+		}
+		$statement .= implode(", AND ", $criteria);
+		$statement .= "
+			;
+		";
+		$preparedStatement = $database->prepare($statement);
+		foreach ($modelProperties as $modelProperty => $value) {
+			if (
+				!is_null($value)
+				&& ($modelProperty != $model::PRIMARY_KEY)
+			) {
+				$preparedStatement->bindValue(":" . $modelProperty, $value);
+			}
+		}
+		return $preparedStatement;
+	}
 
 	public static function prepareUpdate(DatabaseInterface $database, ModelAbstract $model) {
 		$statement = "
