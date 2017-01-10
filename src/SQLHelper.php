@@ -74,8 +74,37 @@ class SQLHelper {
 		$preparedStatement = $database->prepare($statement);
 		return $preparedStatement;
 	}
+	
+	public static function prepareSelectAllWithPaging(DatabaseInterface $database, ModelAbstract $model, PagingMetaData $paging, Array $columns = []) {
+		$statement = "
+			SELECT
+		";
+		$statement .= ((empty($columns))
+			? "`" . $model::TABLE . "`.*"
+			: "`" . implode("`, `", $columns) . "`"
+		);
+		$statement .= "
+			FROM
+				`" . $model::TABLE . "`
+		";
+		$statement .= "
+			LIMIT :offset, :limit
+		";
+		$statement .= "
+			;
+		";
+		$preparedStatement = $database->prepare($statement);
+		$offset = ($paging->PageSize * (($paging->PageNumber < 1)
+			? 0
+			: $paging->PageNumber - 1
+		));
+		$limit = $paging->PageSize;
+		$preparedStatement->bindValue(":offset", $offset, PDO::PARAM_INT);
+		$preparedStatement->bindValue(":limit", $limit, PDO::PARAM_INT);
+		return $preparedStatement;
+	}
 
-	public static function prepareSearch(DatabaseInterface $database, ModelAbstract $model, Array $columns = [], PagingMetaData $paging = null) {
+	public static function prepareSearch(DatabaseInterface $database, ModelAbstract $model, Array $columns = []) {
 		$statement = "
 			SELECT
 		";
@@ -103,11 +132,6 @@ class SQLHelper {
 			";
 			$statement .= implode(", AND ", $criteria);
 		}
-		if (!is_null($paging)) {
-			$statement .= "
-				LIMIT :offset, :limit
-			";
-		}
 		$statement .= "
 			;
 		";
@@ -120,15 +144,59 @@ class SQLHelper {
 				$preparedStatement->bindValue(":" . $modelProperty, $value);
 			}
 		}
-		if (!is_null($paging)) {
-			$offset = ($paging->PageSize * (($paging->PageNumber < 1)
-				? 0
-				: $paging->PageNumber - 1
-			));
-			$limit = $paging->PageSize;
-			$preparedStatement->bindValue(":offset", $offset, PDO::PARAM_INT);
-			$preparedStatement->bindValue(":limit", $limit, PDO::PARAM_INT);
+		return $preparedStatement;
+	}
+	
+	public static function prepareSearchWithPaging(DatabaseInterface $database, ModelAbstract $model, PagingMetaData $paging, Array $columns = []) {
+		$statement = "
+			SELECT
+		";
+		$statement .= ((empty($columns))
+			? "`" . $model::TABLE . "`.*"
+			: "`" . implode("`, `", $columns) . "`"
+		);
+		$statement .= "
+			FROM
+				`" . $model::TABLE . "`
+		";
+		$criteria = [];
+		$modelProperties = get_object_vars($model);
+		foreach ($modelProperties as $modelProperty => $value) {
+			if (
+				!is_null($value)
+				&& ($modelProperty != $model::PRIMARY_KEY)
+			) {
+				$criteria[] = "`" . $modelProperty . "` = :" . $modelProperty;
+			}
 		}
+		if (count($criteria)) {
+			$statement .= "
+				WHERE
+			";
+			$statement .= implode(", AND ", $criteria);
+		}
+		$statement .= "
+			LIMIT :offset, :limit
+		";
+		$statement .= "
+			;
+		";
+		$preparedStatement = $database->prepare($statement);
+		foreach ($modelProperties as $modelProperty => $value) {
+			if (
+				!is_null($value)
+				&& ($modelProperty != $model::PRIMARY_KEY)
+			) {
+				$preparedStatement->bindValue(":" . $modelProperty, $value);
+			}
+		}
+		$offset = ($paging->PageSize * (($paging->PageNumber < 1)
+			? 0
+			: $paging->PageNumber - 1
+		));
+		$limit = $paging->PageSize;
+		$preparedStatement->bindValue(":offset", $offset, PDO::PARAM_INT);
+		$preparedStatement->bindValue(":limit", $limit, PDO::PARAM_INT);
 		return $preparedStatement;
 	}
 	
