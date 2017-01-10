@@ -8,7 +8,10 @@ class PagingMetaData {
 	
 	public function __construct($PageSize, $PageNumber, $PageSizeLimit) {
 		if ($PageSize > $PageSizeLimit) {
-			throw new Exception('PageSize limit is ' . $PageSizeLimit . '.');
+			throw new Exception('Limit for PageSize is ' . $PageSizeLimit . '.');
+		}
+		if ($PageNumber < 0) {
+			throw new Exception('Invalid PageNumber.');
 		}
 		$this->PageSize = $PageSize;
 		$this->PageNumber = $PageNumber;

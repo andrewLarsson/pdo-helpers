@@ -9,7 +9,7 @@ class RecordsMetaData {
 		$this->TotalPagesCount = (($PagingMetaData->PageSize == 0)
 			? 0
 			: (
-				($this->TotalRecordCount / $PagingMetaData->PageSize)
+				floor($this->TotalRecordCount / $PagingMetaData->PageSize)
 				+ ((($this->TotalRecordCount % $PagingMetaData->PageSize) == 0)
 					? 0
 					: 1
