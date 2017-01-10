@@ -89,7 +89,6 @@ class SQLHelper {
 		$statement .= "
 			FROM
 				`" . $model::TABLE . "`
-			WHERE
 		";
 		$criteria = [];
 		$modelProperties = get_object_vars($model);
@@ -101,7 +100,12 @@ class SQLHelper {
 				$criteria[] = "`" . $modelProperty . "` = :" . $modelProperty;
 			}
 		}
-		$statement .= implode(", AND ", $criteria);
+		if (count($criteria)) {
+			$statement .= "
+				WHERE
+			";
+			$statement .= implode(", AND ", $criteria);
+		}
 		if (!is_null($paging)) {
 			$statement .= "
 				LIMIT :offset, :limit
@@ -139,7 +143,6 @@ class SQLHelper {
 		$statement .= "
 			FROM
 				`" . $model::TABLE . "`
-			WHERE
 		";
 		$criteria = [];
 		$modelProperties = get_object_vars($model);
@@ -151,7 +154,12 @@ class SQLHelper {
 				$criteria[] = "`" . $modelProperty . "` = :" . $modelProperty;
 			}
 		}
-		$statement .= implode(", AND ", $criteria);
+		if (count($criteria)) {
+			$statement .= "
+				WHERE
+			";
+			$statement .= implode(", AND ", $criteria);
+		}
 		$statement .= "
 			;
 		";
