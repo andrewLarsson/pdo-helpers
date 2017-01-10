@@ -3,15 +3,15 @@
 use \PDO;
 
 class SQLPagingHelper {
-	public static function prepareSearchAndExecuteWithPaging(DatabaseInterface $database, ModelAbstract $model, Array $columns = [], PagingMetaData $pagingMetaData = null) {
+	public static function prepareSearchAndExecuteWithPaging(DatabaseInterface $database, ModelAbstract $model, Array $columns = [], PagingMetaData $paging = null) {
 		return new PagingRecordSet([
-			'PagingMetaData' => $pagingMetaData,
+			'PagingMetaData' => $paging,
 			'RecordsMetaData' => new RecordsMetaData(
 				SQLHelper::prepareCount(
 					$database,
 					$model
 				)->cexecute()->fetch()['COUNT'],
-				$pagingMetaData
+				$paging
 			),
 			'Records' => SQLHelper::prepareSearch(
 				$database,
