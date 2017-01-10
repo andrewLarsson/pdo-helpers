@@ -1,5 +1,7 @@
 <?php namespace AndrewLarsson\Helpers\PDO;
 
+use \PDO;
+
 class SQLHelper {
 	public static function prepareInsert(DatabaseInterface $database, ModelAbstract $model) {
 		$statement = "
@@ -124,8 +126,8 @@ class SQLHelper {
 				: $paging->PageNumber - 1
 			));
 			$limit = $paging->PageSize;
-			$preparedStatement->bindValue(":offset", $offset);
-			$preparedStatement->bindValue(":limit", $limit);
+			$preparedStatement->bindValue(":offset", $offset, PDO::PARAM_INT);
+			$preparedStatement->bindValue(":limit", $limit, PDO::PARAM_INT);
 		}
 		return $preparedStatement;
 	}
