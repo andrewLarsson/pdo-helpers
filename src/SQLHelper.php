@@ -1,10 +1,5 @@
 <?php namespace AndrewLarsson\Helpers\PDO;
 
-use \Exception;
-use \PDOStatement;
-use AndrewLarsson\Helpers\PDO\DatabaseInterface;
-use AndrewLarsson\Helpers\PDO\ModelAbstract;
-
 class SQLHelper {
 	public static function prepareInsert(DatabaseInterface $database, ModelAbstract $model) {
 		$statement = "
@@ -221,16 +216,6 @@ class SQLHelper {
 		$preparedStatement = $database->prepare($statement);
 		$preparedStatement->bindValue(":" . $model::PRIMARY_KEY, $model->{$model::PRIMARY_KEY});
 		return $preparedStatement;
-	}
-
-	public static function mapResults(PDOStatement $statement, $classType, callable $function) {
-		if (!class_exists($objectType)) {
-			throw new Exception("Class \"" . $objectType . "\" does not exist.");
-		}
-		$object = null;
-		while ($object = $statement->fetchObject($classType)) {
-			$function($object);
-		}
 	}
 }
 ?>

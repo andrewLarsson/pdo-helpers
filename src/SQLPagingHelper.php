@@ -1,9 +1,6 @@
 <?php namespace AndrewLarsson\Helpers\PDO;
 
-use \Exception;
-use \PDOStatement;
-use AndrewLarsson\Helpers\PDO\DatabaseInterface;
-use AndrewLarsson\Helpers\PDO\ModelAbstract;
+use \PDO;
 
 class SQLPagingHelper {
 	public static function prepareSearchAndExecuteWithPaging(DatabaseInterface $database, ModelAbstract $model, Array $columns = [], PagingMetaData $pagingMetaData = null) {
