@@ -80,6 +80,16 @@ class SQLExecutionHelper {
 		]);
 	}
 	
+	public static function searchUnique(DatabaseInterface $database, ModelAbstract $model, Array $columns = []) {
+		return SQLHelper::prepareSearch(
+			$database,
+			$model,
+			$columns
+		)->cexecute()->fetchObject(
+			get_class($model)
+		);
+	}
+	
 	public static function count(DatabaseInterface $database, ModelAbstract $model) {
 		return SQLHelper::prepareCount(
 			$database,
